@@ -1,8 +1,25 @@
 {
   "extends": "@electron-toolkit/tsconfig/tsconfig.node.json",
-  "include": ["src/renderer/**/*.ts", "src/preload/*.d.ts","src/types/*.d.ts","electron"],
   "compilerOptions": {
+    "moduleResolution": "Bundler",
     "composite": true,
-    "types": ["electron-vite/node"]
-  }
+    "strictFunctionTypes": false,
+    "types": [
+      "node",
+      "electron-vite/node",
+    ],
+    "paths": {
+      "@/*": [
+        "./src/main/*"
+      ],
+    },
+    "noImplicitAny": true,
+  },
+  "include": [
+    "src/main/**/*",
+    "src/renderer/**/*",
+    "forge.*",
+    "vite.*.config.ts",
+    "src/preload.ts"
+  ]
 }

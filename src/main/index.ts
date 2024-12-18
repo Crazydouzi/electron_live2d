@@ -1,29 +1,41 @@
-import { app, shell, BrowserWindow } from 'electron'
-import { join } from 'path'
-import { electronApp, optimizer, is } from '@electron-toolkit/utils'
-import icon from '../../resources/icon.png?asset'
+import { app, shell, BrowserWindow, ipcMain, Tray, Menu, IgnoreMouseEventsOptions, globalShortcut, ipcRenderer } from 'electron'
+import path from 'path'
+import { electronApp, optimizer, } from '@electron-toolkit/utils'
+
+if (require('electron-squirrel-startup')) {
+  app.quit();
+}
 
 function createWindow(): void {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
-    // width: ,
-    // height: 670,
+    width: 500,
+    height: 670,
     show: false,
+    //无边窗口
     frame: false,
     transparent: true,
-    resizable: false,
+    //任务栏隐藏
+    skipTaskbar: false,
     autoHideMenuBar: true,
-    ...(process.platform === 'linux' ? { icon } : {}),
+    //全屏
+    fullscreenable: true,
+    fullscreen: true,
     webPreferences: {
-      preload: join(__dirname, '../preload/index.js'),
-      devTools: false,
+      preload: path.join(__dirname, 'preload.js'),
+      defaultFontFamily:{
+        standard:"Microsoft YaHei"
+      },
+      defaultFontSize:80,
+      //开发者工具
+      devTools: true,
       sandbox: false,
       nodeIntegration: true,
-      contextIsolation: false
+      contextIsolation: true
     }
   })
-  mainWindow.setIgnoreMouseEvents(true)
-  mainWindow.setAlwaysOnTop(true)
+  // mainWindow.setIgnoreMouseEvents(true)
+  // mainWindow.setAlwaysOnTop(true)
 
   mainWindow.on('ready-to-show', () => {
     mainWindow.show()
@@ -36,13 +48,27 @@ function createWindow(): void {
 
   // HMR for renderer base on electron-vite cli.
   // Load the remote URL for development or the local html file for production.
-  if (is.dev && process.env['ELECTRON_RENDERER_URL']) {
-    mainWindow.loadURL(process.env['ELECTRON_RENDERER_URL'])
+  if (MAIN_WINDOW_VITE_DEV_SERVER_URL) {
+    mainWindow.loadURL(MAIN_WINDOW_VITE_DEV_SERVER_URL)
   } else {
-    mainWindow.loadFile(join(__dirname, '../renderer/index.html'))
+    mainWindow.loadFile(path.join(__dirname, `../renderer/${MAIN_WINDOW_VITE_NAME}/index.html`))
   }
+  // Open the DevTools.
+  mainWindow.webContents.openDevTools();
+
+  //快捷键
+  globalShortcut.register("CommandOrControl+shift+S",()=>{
+    mainWindow.setIgnoreMouseEvents(false)
+  })
 }
 
+let tray: Tray
+const contextMenu = Menu.buildFromTemplate([
+  { label: '展示L2D', type: 'checkbox', checked: true },
+  { label: '始终置顶', type: 'checkbox', checked: true },
+  { label: '设置'},
+  { label: '退出'},
+])
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
@@ -57,13 +83,18 @@ app.whenReady().then(() => {
     optimizer.watchWindowShortcuts(window)
   })
 
-  createWindow()
 
   app.on('activate', function () {
     // On macOS it's common to re-create a window in the app when the
     // dock icon is clicked and there are no other windows open.
     if (BrowserWindow.getAllWindows().length === 0) createWindow()
   })
+
+
+  const icon = path.join(__dirname, '/assets/icon2.png')
+  tray = new Tray(icon)
+  tray.setContextMenu(contextMenu)
+  createWindow()
 })
 
 // Quit when all windows are closed, except on macOS. There, it's common
@@ -75,5 +106,17 @@ app.on('window-all-closed', () => {
   }
 })
 
+//鼠标透传事件
+ipcMain.on('set-ignore-mouse-events', (event, arg: boolean, options?: IgnoreMouseEventsOptions) => {
+  // console.log(event)
+  BrowserWindow.fromWebContents(event.sender)?.setIgnoreMouseEvents(arg, options)
+})
+ipcMain.on('set-always-on-Top',(event,arg:boolean)=>{
+  BrowserWindow.fromWebContents(event.sender)?.setAlwaysOnTop(arg)
+})
+ipcMain.on('win-close', () => {
+  globalShortcut.unregisterAll()
+  app.quit()
+})
 // In this file you can include the rest of your app"s specific main process
 // code. You can also put them in separate files and require them here.

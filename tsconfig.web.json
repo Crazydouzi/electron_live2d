@@ -1,7 +1,31 @@
 {
   "extends": "@electron-toolkit/tsconfig/tsconfig.web.json",
-  "include": ["src/renderer/**/*.ts", "src/preload/*.d.ts","src/types/*.d.ts","electron"],
+  "include": [
+    "src/renderer/**/*",
+    "src/preload/*",
+    "public/L2DSDK",
+    "src/preload.ts",
+    "src/types.d.ts"
+
+  ],
   "compilerOptions": {
-    "composite": true
+    "composite": true,
+    "moduleResolution": "Bundler",
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "isolatedModules": false,
+    "types": [
+      "vite/client",
+    ],
+    "lib": [
+      "DOM",
+      "ESNext"
+    ],
+    "paths": {
+      "@*": [
+        "./src/*"
+      ],
+    },
+    "noImplicitAny": true,
   }
 }
