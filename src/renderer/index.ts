@@ -72,22 +72,22 @@ function draggable(model: any): void {
 }
 function setMouseEvents(): void {
   //默认穿透
-  ipcAPI.setIgnoreMouseEvent( true)
-
+  // ipcAPI.setIgnoreMouseEvent( true)
+  window.ipcManager.send("set-ignore-mouse-events",true,{forward:true})
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-  document.addEventListener('keydown', (key) => {
-    if (key.altKey && key.key == 'F1') {
-      ipcAPI.setIgnoreMouseEvent(false)
-    }
-  })
-  document.addEventListener('keyup', () => {
-    ipcAPI.setIgnoreMouseEvent(true)
-  })
-  el?.addEventListener('mouseup', () => {
-    ipcAPI.setIgnoreMouseEvent(true)
-  })
-  el?.addEventListener('mouseout', () => {
-    ipcAPI.setIgnoreMouseEvent(true)
-  })
+  // document.addEventListener('keydown', (key) => {
+  //   if (key.altKey && key.key == 'F1') {
+  //     ipcAPI.setIgnoreMouseEvent(false)
+  //   }
+  // })
+  // document.addEventListener('keyup', () => {
+  //   ipcAPI.setIgnoreMouseEvent(true)
+  // })
+  // el?.addEventListener('mouseup', () => {
+  //   ipcAPI.setIgnoreMouseEvent(true)
+  // })
+  // el?.addEventListener('mouseout', () => {
+  //   ipcAPI.setIgnoreMouseEvent(true)
+  // })
 }
 init()

@@ -20,6 +20,6 @@
     "src/renderer/**/*",
     "forge.*",
     "vite.*.config.ts",
-    "src/preload.ts"
+    "src/main/preload.ts"
   ]
 }

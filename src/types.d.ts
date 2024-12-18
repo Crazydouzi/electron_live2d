@@ -1,9 +1,14 @@
 import { ElectronAPI } from '@electron-toolkit/preload'
 import { IgnoreMouseEventsOptions } from 'electron'
 import * as PIXI from 'pixi.js'
+import { IPCManager } from '@main/extension/ipcManager'
 type PIXI=typeof PIXI
 declare global {
   interface Window {
+    ipcManager:{
+      send:<K extends IPCManager.EventsKeys>(event: K, ...args: Parameters<IPCManager.Events[K]>)=>void,
+      on: <K extends IPCManager.EventsKeys>(channel: K, listener: IPCManager.Handler<K>)=>()=>any
+    },
     electronAPI: IElectronAPI,
     PIXI: PIXI,
     electron: ElectronAPI

@@ -1,7 +1,25 @@
 "use strict";
+var __defProp = Object.defineProperty;
+var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "symbol" ? key + "" : key, value);
 const electron = require("electron");
 const path = require("path");
 const utils = require("@electron-toolkit/utils");
+class trayManager {
+  // ipcAPI = window.electronAPI
+  constructor() {
+    __publicField(this, "tray");
+    const icon = path.join(__dirname, "/assets/icon2.png");
+    const contextMenu = electron.Menu.buildFromTemplate([
+      { label: "展示L2D", type: "checkbox", checked: true },
+      { label: "始终置顶", type: "checkbox", checked: true },
+      { label: "设置" },
+      { label: "退出" }
+    ]);
+    this.tray = new electron.Tray(icon);
+    this.tray.setContextMenu(contextMenu);
+  }
+}
 if (require("electron-squirrel-startup")) {
   electron.app.quit();
 }
@@ -20,6 +38,7 @@ function createWindow() {
     fullscreenable: true,
     fullscreen: true,
     webPreferences: {
+      // preload: path.join(__dirname, 'preload.js'),
       preload: path.join(__dirname, "preload.js"),
       defaultFontFamily: {
         standard: "Microsoft YaHei"
@@ -43,17 +62,13 @@ function createWindow() {
     mainWindow.loadURL("http://localhost:5173");
   }
   mainWindow.webContents.openDevTools();
+  electron.globalShortcut.register("CommandOrControl+shift+D", () => {
+    mainWindow.setIgnoreMouseEvents(true, { forward: true });
+  });
   electron.globalShortcut.register("CommandOrControl+shift+S", () => {
     mainWindow.setIgnoreMouseEvents(false);
   });
 }
-let tray;
-const contextMenu = electron.Menu.buildFromTemplate([
-  { label: "展示L2D", type: "checkbox", checked: true },
-  { label: "始终置顶", type: "checkbox", checked: true },
-  { label: "设置" },
-  { label: "退出" }
-]);
 electron.app.whenReady().then(() => {
   utils.electronApp.setAppUserModelId("com.electron");
   electron.app.on("browser-window-created", (_, window) => {
@@ -62,9 +77,7 @@ electron.app.whenReady().then(() => {
   electron.app.on("activate", function() {
     if (electron.BrowserWindow.getAllWindows().length === 0) createWindow();
   });
-  const icon = path.join(__dirname, "/assets/icon2.png");
-  tray = new electron.Tray(icon);
-  tray.setContextMenu(contextMenu);
+  new trayManager();
   createWindow();
 });
 electron.app.on("window-all-closed", () => {

@@ -2,9 +2,9 @@
   "extends": "@electron-toolkit/tsconfig/tsconfig.web.json",
   "include": [
     "src/renderer/**/*",
-    "src/preload/*",
+    "src/main/extension/*",
     "public/L2DSDK",
-    "src/preload.ts",
+    "src/main/preload.ts",
     "src/types.d.ts"
 
   ],
