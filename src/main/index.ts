@@ -1,6 +1,7 @@
 import { app, shell, BrowserWindow, ipcMain, Tray, Menu, IgnoreMouseEventsOptions, globalShortcut, ipcRenderer } from 'electron'
 import path from 'path'
 import { electronApp, optimizer, } from '@electron-toolkit/utils'
+import { trayManager } from './extension/trayManager';
 
 if (require('electron-squirrel-startup')) {
   app.quit();
@@ -22,7 +23,9 @@ function createWindow(): void {
     fullscreenable: true,
     fullscreen: true,
     webPreferences: {
+      // preload: path.join(__dirname, 'preload.js'),
       preload: path.join(__dirname, 'preload.js'),
+
       defaultFontFamily:{
         standard:"Microsoft YaHei"
       },
@@ -57,18 +60,13 @@ function createWindow(): void {
   mainWindow.webContents.openDevTools();
 
   //快捷键
+  globalShortcut.register("CommandOrControl+shift+D",()=>{
+    mainWindow.setIgnoreMouseEvents(true,{forward:true})
+  })
   globalShortcut.register("CommandOrControl+shift+S",()=>{
     mainWindow.setIgnoreMouseEvents(false)
   })
 }
-
-let tray: Tray
-const contextMenu = Menu.buildFromTemplate([
-  { label: '展示L2D', type: 'checkbox', checked: true },
-  { label: '始终置顶', type: 'checkbox', checked: true },
-  { label: '设置'},
-  { label: '退出'},
-])
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
@@ -91,9 +89,7 @@ app.whenReady().then(() => {
   })
 
 
-  const icon = path.join(__dirname, '/assets/icon2.png')
-  tray = new Tray(icon)
-  tray.setContextMenu(contextMenu)
+  new trayManager()
   createWindow()
 })
 
