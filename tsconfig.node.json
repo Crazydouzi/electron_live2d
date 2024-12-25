@@ -18,6 +18,7 @@
   "include": [
     "src/main/**/*",
     "src/renderer/**/*",
+    "src/types.d.ts",
     "forge.*",
     "vite.*.config.ts",
     "src/main/preload.ts"

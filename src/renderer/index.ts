@@ -7,7 +7,7 @@ import { Live2DModel } from 'pixi-live2d-display'
 // 将 PIXI 暴露到 window 上，这样插件就可以通过 window.PIXI.Ticker 来自动更新模型
 window.PIXI = PIXI
 // const ipcRenderer = window.Electron.ipcRenderer
-const ipcAPI = window.electronAPI
+const ipcManager = window.ipcManager
 const el = document.getElementById('live2d_view')
 async function init(): Promise<void> {
   const app = new PIXI.Application({
@@ -73,7 +73,7 @@ function draggable(model: any): void {
 function setMouseEvents(): void {
   //默认穿透
   // ipcAPI.setIgnoreMouseEvent( true)
-  window.ipcManager.send("set-ignore-mouse-events",true,{forward:true})
+  ipcManager.send("set-ignore-mouse-events",true,{forward:true})
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   // document.addEventListener('keydown', (key) => {
   //   if (key.altKey && key.key == 'F1') {
