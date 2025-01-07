@@ -2,7 +2,8 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { contextBridge, IgnoreMouseEventsOptions, ipcRenderer, IpcRendererEvent } from 'electron'
 import { electronAPI } from '@electron-toolkit/preload'
-import type { IPCManager } from "./extension/ipcManager";
+import { IpcEvents, IpcEventsKeys } from '../types'
+import type { Handler } from './extension/ipcManager'
 
 
 const parameterFormatter = <T>(args: any[]) => {
@@ -36,10 +37,12 @@ try {
   })
 
   const ipcManager = {
-    send: <K extends IPCManager.EventsKeys>(channel: K, ...args: Parameters<IPCManager.Events[K]>) => ipcRenderer.send(channel, ...args),
-    on: <K extends IPCManager.EventsKeys>(channel: K, listener: IPCManager.Handler<K>) => {
-      const listenerWrapper = (_event: IpcRendererEvent, ...args: Parameters<IPCManager.Handler<K>>) =>
-        listener(...parameterFormatter<Parameters<IPCManager.Handler<K>>>(args));
+    // 发送到主进程
+    send: <K extends IpcEventsKeys>(channel: K, ...args: Parameters<IpcEvents[K]>) => ipcRenderer.send(channel, ...args),
+    // 接受来自主进程
+    on: <K extends IpcEventsKeys>(channel: K, listener: Handler<K>) => {
+      const listenerWrapper = (_event: IpcRendererEvent, ...args: Parameters<Handler<K>>) =>
+        listener(...parameterFormatter<Parameters<Handler<K>>>(args));
       ipcRenderer.on(channel, listenerWrapper);
       return () => ipcRenderer.removeListener(channel, listenerWrapper);
     }
@@ -55,23 +58,7 @@ try {
 
 // window['ipcRenderer'] = require('electron').ipcRenderer
 // `exposeInMainWorld` can't detect attributes and methods of `prototype`, manually patching it.
-function withPrototype(obj: Record<string, any>) {
-  const protos = Object.getPrototypeOf(obj)
 
-  for (const [key, value] of Object.entries(protos)) {
-    if (Object.prototype.hasOwnProperty.call(obj, key)) continue
-
-    if (typeof value === 'function') {
-      // Some native APIs, like `NodeJS.EventEmitter['on']`, don't work in the Renderer process. Wrapping them into a function.
-      obj[key] = function (...args: any) {
-        return value.call(obj, ...args)
-      }
-    } else {
-      obj[key] = value
-    }
-  }
-  return obj
-}
 
 // --------- Preload scripts loading ---------
 // function domReady(condition: DocumentReadyState[] = ['complete', 'interactive']) {

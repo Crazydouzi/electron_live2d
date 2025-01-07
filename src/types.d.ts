@@ -1,13 +1,14 @@
 import { ElectronAPI } from '@electron-toolkit/preload'
 import { IgnoreMouseEventsOptions } from 'electron'
 import * as PIXI from 'pixi.js'
-import { IPCManager } from '@main/extension/ipcManager'
+import { Handler } from '@main/extension/ipcManager'
+
 type PIXI=typeof PIXI
 declare global {
   interface Window {
     ipcManager:{
-      send:<K extends IPCManager.EventsKeys>(event: K, ...args: Parameters<IPCManager.Events[K]>)=>void,
-      on: <K extends IPCManager.EventsKeys>(channel: K, listener: IPCManager.Handler<K>)=>()=>any
+      send:<K extends IpcEventsKeys>(event: K, ...args: Parameters<IpcEvents[K]>)=>void,
+      on: <K extends IpcEventsKeys>(channel: K, listener: Handler<K>)=>()=>any
     },
     electronAPI: IElectronAPI,
     PIXI: PIXI,
@@ -27,3 +28,11 @@ declare module '*.tiff'
 export interface IElectronAPI {
   setIgnoreMouseEvent: ( arg: boolean, options?: IgnoreMouseEventsOptions) => void
 }
+
+export interface IpcEvents {
+  'set-ignore-mouse-events': (arg: boolean, options?: IgnoreMouseEventsOptions) => void
+  'set-always-on-Top': (arg: boolean) => void
+  'set-live2d-visible': (arg: boolean) => void
+}
+
+export type IpcEventsKeys = keyof IpcEvents

@@ -1,4 +1,4 @@
-import { app, shell, BrowserWindow, ipcMain, Tray, Menu, IgnoreMouseEventsOptions, globalShortcut, ipcRenderer } from 'electron'
+import { app, shell, BrowserWindow, ipcMain, IgnoreMouseEventsOptions, globalShortcut } from 'electron'
 import path from 'path'
 import { electronApp, optimizer, } from '@electron-toolkit/utils'
 import { trayManager } from './extension/trayManager';
@@ -17,7 +17,7 @@ function createWindow(): void {
     frame: false,
     transparent: true,
     //任务栏隐藏
-    skipTaskbar: false,
+    skipTaskbar: true,
     autoHideMenuBar: true,
     //全屏
     fullscreenable: true,
@@ -37,8 +37,6 @@ function createWindow(): void {
       contextIsolation: true
     }
   })
-  // mainWindow.setIgnoreMouseEvents(true)
-  // mainWindow.setAlwaysOnTop(true)
 
   mainWindow.on('ready-to-show', () => {
     mainWindow.show()
@@ -59,6 +57,9 @@ function createWindow(): void {
   // Open the DevTools.
   mainWindow.webContents.openDevTools();
 
+
+  new trayManager().createMenu(mainWindow)
+
   //快捷键
   globalShortcut.register("CommandOrControl+shift+D",()=>{
     mainWindow.setIgnoreMouseEvents(true,{forward:true})
@@ -74,9 +75,9 @@ app.whenReady().then(() => {
   // Set app user model id for windows
   electronApp.setAppUserModelId('com.electron')
 
-  // Default open or close DevTools by F12 in development
-  // and ignore CommandOrControl + R in production.
-  // see https://github.com/alex8088/electron-toolkit/tree/master/packages/utils
+  // // Default open or close DevTools by F12 in development
+  // // and ignore CommandOrControl + R in production.
+  // // see https://github.com/alex8088/electron-toolkit/tree/master/packages/utils
   app.on('browser-window-created', (_, window) => {
     optimizer.watchWindowShortcuts(window)
   })
@@ -88,8 +89,6 @@ app.whenReady().then(() => {
     if (BrowserWindow.getAllWindows().length === 0) createWindow()
   })
 
-
-  new trayManager()
   createWindow()
 })
 

@@ -1,9 +1,5 @@
-// import '../lib/L2DSDK/live2d.min.js'
-// import '../lib/L2DSDK/live2dcubismcore.min.js'
 import * as PIXI from 'pixi.js'
 import { Live2DModel } from 'pixi-live2d-display'
-// import { ipcRenderer } from 'electron'
-
 // 将 PIXI 暴露到 window 上，这样插件就可以通过 window.PIXI.Ticker 来自动更新模型
 window.PIXI = PIXI
 // const ipcRenderer = window.Electron.ipcRenderer
@@ -16,17 +12,19 @@ async function init(): Promise<void> {
     autoDensity: true,
     resizeTo: window,
     backgroundAlpha: 0
+
     // width: 400,
     // height: 500
   })
   const model = await Live2DModel.from('/model/Hiyori/Hiyori.model3.json')
   app.stage.addChild(model)
-
-  const scaleX = (innerWidth * 0.6) / model.width
-  const scaleY = (innerHeight * 0.8) / model.height
+  console.log(innerWidth)
+  const scaleX = (innerWidth * 0.2) / model.width
+  const scaleY = (innerHeight * 0.4) / model.height
   model.scale.set(Math.min(scaleX, scaleY))
-  model.x = -200
-  model.y = -70
+
+  model.x = innerWidth-model.width
+  model.y = (innerHeight * 0.4) - model.height
   // // 交互
   // model.on('hit', (hitAreas) => {
   //   el?.addEventListener('mousedown', (val) => {
@@ -42,7 +40,7 @@ async function init(): Promise<void> {
   //     model.motion('tap_body')
   //   }
   // })
-
+  visible(app)
   setMouseEvents()
   draggable(model)
 }
@@ -72,22 +70,19 @@ function draggable(model: any): void {
 }
 function setMouseEvents(): void {
   //默认穿透
-  // ipcAPI.setIgnoreMouseEvent( true)
-  ipcManager.send("set-ignore-mouse-events",true,{forward:true})
-  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-  // document.addEventListener('keydown', (key) => {
-  //   if (key.altKey && key.key == 'F1') {
-  //     ipcAPI.setIgnoreMouseEvent(false)
-  //   }
-  // })
-  // document.addEventListener('keyup', () => {
-  //   ipcAPI.setIgnoreMouseEvent(true)
-  // })
-  // el?.addEventListener('mouseup', () => {
-  //   ipcAPI.setIgnoreMouseEvent(true)
-  // })
-  // el?.addEventListener('mouseout', () => {
-  //   ipcAPI.setIgnoreMouseEvent(true)
-  // })
+  ipcManager.send("set-ignore-mouse-events", true, { forward: true })
+}
+function visible(app: PIXI.Application<PIXI.ICanvas>): void {
+  ipcManager.on("set-live2d-visible", (e: any) => {
+    console.log(e)
+    if (e) {
+      if (el) el.style.visibility = "visible"
+      app.start()
+    } else {
+      console.log(e)
+      if (el) el.style.visibility = "hidden"
+      app.stop()
+    }
+  })
 }
 init()
