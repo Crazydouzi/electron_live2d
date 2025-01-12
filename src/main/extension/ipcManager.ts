@@ -1,13 +1,14 @@
-import { ipcMain,IpcMainEvent, IpcRendererEvent, webContents } from 'electron'
+import { ipcMain,IpcMainEvent, IpcMainInvokeEvent, IpcRendererEvent, webContents } from 'electron'
 
 import { IpcEvents, IpcEventsKeys } from '../../types'
 
-export type Handler<K extends keyof IpcEvents> = (e: IpcMainEvent | IpcRendererEvent, ...args: Parameters<IpcEvents[K]>[]) => void
+export type Handler<K extends keyof IpcEvents> = (e: IpcMainEvent | IpcRendererEvent|IpcMainInvokeEvent|Function, ...args: Parameters<IpcEvents[K]>[]) => void
 
 export interface IpcManager {
   handlers: { [K in IpcEventsKeys]?: Handler<K>[] }
   on: <K extends IpcEventsKeys>(event: K, handler: Handler<K>) => void
   send: <K extends IpcEventsKeys>(event: K, ...args: Parameters<IpcEvents[K]>) => void
+  handle:<K extends IpcEventsKeys>(event:K,arg: Handler<K>)=>any
 }
 
 export const ipcManager: IpcManager = {
@@ -32,10 +33,15 @@ export const ipcManager: IpcManager = {
         return JSON.stringify(arg)
       }
       return arg
-    })
+    }),
 
-    webContents.getAllWebContents().forEach((webContent) => {
-      webContent.send(event, ...args)
-    })
+      webContents.getAllWebContents().forEach((webContent) => {
+        webContent.send(event, ...args)
+      })
+  },
+
+  handle: <K extends IpcEventsKeys>(event: K, arg: Handler<K>)=> {
+    console.log(1)
+    ipcMain.handle(event,arg)
   }
 }

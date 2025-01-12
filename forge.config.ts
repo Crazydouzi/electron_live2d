@@ -8,10 +8,9 @@ import { FusesPlugin } from '@electron-forge/plugin-fuses';
 import { FuseV1Options, FuseVersion } from '@electron/fuses';
 const config: ForgeConfig = {
   packagerConfig: {
-    asar: true,
+    asar: false,
     ignore:['./model'],
     extraResource:[
-      './L2DSDK',
       './model'
     ]
   },
@@ -51,7 +50,7 @@ const config: ForgeConfig = {
       [FuseV1Options.EnableNodeOptionsEnvironmentVariable]: false,
       [FuseV1Options.EnableNodeCliInspectArguments]: false,
       [FuseV1Options.EnableEmbeddedAsarIntegrityValidation]: true,
-      [FuseV1Options.OnlyLoadAppFromAsar]: true,
+      [FuseV1Options.OnlyLoadAppFromAsar]: false,
     }),
   ],
 };

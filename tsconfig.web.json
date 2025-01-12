@@ -3,9 +3,9 @@
   "include": [
     "src/renderer/**/*",
     "src/main/extension/*",
+    "src/utils",
     "src/main/preload.ts",
     "src/types.d.ts",
-     "/L2DSDK",
     "/model/**"
 
   ],

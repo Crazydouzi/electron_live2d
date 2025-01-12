@@ -19,10 +19,10 @@
     "src/main/**/*",
     "src/renderer/**/*",
     "src/types.d.ts",
+    "src/utils",
     "forge.*",
     "vite.*.config.ts",
     "src/main/preload.ts",
-    "/L2DSDK",
-    "/model"
+    "/model",
   ]
 }

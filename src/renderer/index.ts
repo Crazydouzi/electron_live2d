@@ -16,9 +16,9 @@ async function init(): Promise<void> {
     // width: 400,
     // height: 500
   })
-  const model = await Live2DModel.from('/model/Hiyori/Hiyori.model3.json')
+  let filePath= await ipcManager.handle("get-model-list")
+  const model = await Live2DModel.from(filePath)
   app.stage.addChild(model)
-  console.log(innerWidth)
   const scaleX = (innerWidth * 0.2) / model.width
   const scaleY = (innerHeight * 0.4) / model.height
   model.scale.set(Math.min(scaleX, scaleY))
@@ -43,6 +43,9 @@ async function init(): Promise<void> {
   visible(app)
   setMouseEvents()
   draggable(model)
+  ipcManager.on("get-model-list",()=>{
+
+  })
 }
 //移动模型
 function draggable(model: any): void {
@@ -72,8 +75,10 @@ function setMouseEvents(): void {
   //默认穿透
   ipcManager.send("set-ignore-mouse-events", true, { forward: true })
 }
-function visible(app: PIXI.Application<PIXI.ICanvas>): void {
-  ipcManager.on("set-live2d-visible", (e: any) => {
+async function visible(app: PIXI.Application<PIXI.ICanvas>): Promise<void> {
+
+  ipcManager.on("set-live2d-visible", async (e: any) => {
+
     if (e) {
       if (el) el.style.visibility = "visible"
       app.start()
