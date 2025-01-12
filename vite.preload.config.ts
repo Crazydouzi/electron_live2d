@@ -21,6 +21,7 @@ export default defineConfig((env) => {
           assetFileNames: '[name].[ext]',
         },
       },
+
     },
     plugins: [pluginHotRestart('reload')],
   };

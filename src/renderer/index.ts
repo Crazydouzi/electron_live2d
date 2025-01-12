@@ -74,12 +74,10 @@ function setMouseEvents(): void {
 }
 function visible(app: PIXI.Application<PIXI.ICanvas>): void {
   ipcManager.on("set-live2d-visible", (e: any) => {
-    console.log(e)
     if (e) {
       if (el) el.style.visibility = "visible"
       app.start()
     } else {
-      console.log(e)
       if (el) el.style.visibility = "hidden"
       app.stop()
     }

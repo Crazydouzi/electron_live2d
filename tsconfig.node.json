@@ -21,6 +21,8 @@
     "src/types.d.ts",
     "forge.*",
     "vite.*.config.ts",
-    "src/main/preload.ts"
+    "src/main/preload.ts",
+    "/L2DSDK",
+    "/model"
   ]
 }

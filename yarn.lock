@@ -506,12 +506,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@electron-toolkit/preload@npm:^2.0.0":
-  version: 2.0.0
-  resolution: "@electron-toolkit/preload@npm:2.0.0"
+"@electron-toolkit/preload@npm:^3.0.0":
+  version: 3.0.1
+  resolution: "@electron-toolkit/preload@npm:3.0.1"
   peerDependencies:
     electron: ">=13.0.0"
-  checksum: 10c0/6f255f0db30ffa6a6e75748ccf7f4b4e06b0b1a4bac8370b9b5021adf15680a2eab6a7ca3c25b2454c68a996b304106cfd5962f048d6cbc47b5910e510786b0b
+  checksum: 10c0/7ebc3738dbdbc7295f37fa5cfc4dbc0b60576405c04a017aa121f6b3377674fc38871c030f0506cf9c7dc61c96f944576731dd8ae1aac471b8b63f4651b9451f
   languageName: node
   linkType: hard
 
@@ -524,12 +524,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@electron-toolkit/utils@npm:^2.0.0":
-  version: 2.0.1
-  resolution: "@electron-toolkit/utils@npm:2.0.1"
+"@electron-toolkit/utils@npm:^3.0.0":
+  version: 3.0.0
+  resolution: "@electron-toolkit/utils@npm:3.0.0"
   peerDependencies:
     electron: ">=13.0.0"
-  checksum: 10c0/3711a9b84072df2c02d26237feb09f9183034a7c2cccc11ab1ad8f09d9ef0f241b8adba50b638a7b84b8463d56fca7971309d9c63b6bc56ad0f23a53899a4243
+  checksum: 10c0/b9cb3da36fec97b1a8e2344283da8a78c77d7fb27d09bcf60ca0947db246460a8d05f12cd25bc1c764211443caa58684656e197f9fa3f587a9a5589ec9cf74de
   languageName: node
   linkType: hard
 
@@ -3065,9 +3065,9 @@ __metadata:
     "@electron-forge/plugin-auto-unpack-natives": "npm:^7.5.0"
     "@electron-forge/plugin-fuses": "npm:^7.5.0"
     "@electron-forge/plugin-vite": "npm:^7.5.0"
-    "@electron-toolkit/preload": "npm:^2.0.0"
+    "@electron-toolkit/preload": "npm:^3.0.0"
     "@electron-toolkit/tsconfig": "npm:^1.0.1"
-    "@electron-toolkit/utils": "npm:^2.0.0"
+    "@electron-toolkit/utils": "npm:^3.0.0"
     "@electron/fuses": "npm:^1.8.0"
     "@typescript-eslint/eslint-plugin": "npm:^5.0.0"
     "@typescript-eslint/parser": "npm:^5.0.0"

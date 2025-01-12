@@ -3,9 +3,9 @@ import path from 'path'
 import { electronApp, optimizer, } from '@electron-toolkit/utils'
 import { trayManager } from './extension/trayManager';
 
-if (require('electron-squirrel-startup')) {
-  app.quit();
-}
+// if (require('electron-squirrel-startup')) {
+//   app.quit();
+// }
 
 function createWindow(): void {
   // Create the browser window.
