@@ -16,6 +16,7 @@ export default defineConfig((env) => {
     build: {
       outDir: `.vite/renderer/${name}`,
     },
+    publicDir:"./rPublic",
     plugins: [pluginExposeRenderer(name)],
     resolve: {
       preserveSymlinks: true,

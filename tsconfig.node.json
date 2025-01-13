@@ -9,7 +9,7 @@
       "electron-vite/node",
     ],
     "paths": {
-      "@/*": [
+      "@main/*": [
         "./src/main/*"
       ],
     },
